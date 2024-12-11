@@ -3,6 +3,8 @@ const connectDb = require("./database");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+const authRouter = require("./routes/auth/auth-routes");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -23,6 +25,8 @@ app.use(
 
 app.use(cookieParser());
 app.use(express.json());
+
+app.use("/api/auth", authRouter);
 
 connectDb().then(() => {
   app.listen(PORT, () => {
