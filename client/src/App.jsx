@@ -16,13 +16,10 @@ import ShoppingCheckout from "./pages/shopping/Checkout";
 import ShoppingAccount from "./pages/shopping/Account";
 import CheckAuth from "./components/common/CheckAuth";
 import UnauthPage from "./pages/unauth-page/UnauthPage";
+import { useSelector } from "react-redux";
 
 function App() {
-  const isAuthenticated = false;
-  const user = {
-    name: "Nitin",
-    role: "user",
-  };
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
 
   return (
     <>
