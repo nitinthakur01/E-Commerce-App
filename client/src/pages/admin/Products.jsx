@@ -9,7 +9,6 @@ import {
 import React, { Fragment, useState } from "react";
 import { addProductFormElements } from "@/config";
 import ImageUpload from "@/components/admin/ImageUpload";
-import { use } from "react";
 
 const initialFormData = {
   image: null,
@@ -28,8 +27,10 @@ const AdminProducts = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
+  const [imageLoadingState, setImageLoadingState] = useState(false);
 
   const onSubmit = () => {};
+  console.log(formData, "formdata");
 
   return (
     <Fragment>
@@ -52,6 +53,7 @@ const AdminProducts = () => {
             setImageFile={setImageFile}
             uploadedImageUrl={uploadedImageUrl}
             setUploadedImageUrl={setUploadedImageUrl}
+            setImageLoadingState={setImageLoadingState}
           />
           <div className="py-6">
             <CommonForm
