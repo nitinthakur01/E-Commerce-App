@@ -49,8 +49,8 @@ function CheckAuth({ isAuthenticated, user, children }) {
 
   if (
     isAuthenticated &&
-    user?.role == "admin" &&
-    location.pathname.includes("shop")
+    user?.role === "admin" &&
+    location.pathname.toLowerCase().includes("shop")
   ) {
     return <Navigate to="/admin/dashboard" />;
   }
