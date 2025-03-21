@@ -4,10 +4,10 @@ import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
 
-function ShoppingProductTile({ product }) {
+function ShoppingProductTile({ product, handleGetProductDetails }) {
   return (
     <Card className="w-full mx-w-sm mx-auto">
-      <div className="">
+      <div onClick={() => handleGetProductDetails(product?._id)}>
         <div className="relative">
           <img
             src={product?.image}
