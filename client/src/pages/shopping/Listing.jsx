@@ -1,4 +1,5 @@
 import ProductFilter from "@/components/shopping/Filter";
+import ProductDetailsDialog from "@/components/shopping/ProductDetails";
 import ShoppingProductTile from "@/components/shopping/ProductTile";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,6 +41,7 @@ const ShoppingListing = () => {
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   const handleSort = (value) => {
     setSort(value);
@@ -91,6 +93,10 @@ const ShoppingListing = () => {
       );
   }, [dispatch, sort, filters]);
 
+  useEffect(() => {
+    if (productDetails !== null) setOpenDetailsDialog(true);
+  }, [productDetails]);
+
   console.log(productDetails, "productDetails");
 
   return (
@@ -140,6 +146,11 @@ const ShoppingListing = () => {
             : null}
         </div>
       </div>
+      <ProductDetailsDialog
+        open={openDetailsDialog}
+        setOpen={setOpenDetailsDialog}
+        productDetails={productDetails}
+      />
     </div>
   );
 };
