@@ -17,7 +17,7 @@ const addToCart = async (req, res) => {
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: "Product Not Found",
+        message: "Product not found",
       });
     }
 
@@ -58,12 +58,12 @@ const fetchCartItems = async (req, res) => {
     if (!userId) {
       return res.status(400).json({
         success: false,
-        message: "User id is manadatory",
+        message: "User id is manadatory!",
       });
     }
 
     const cart = await Cart.findOne({ userId }).populate({
-      path: "item.productId",
+      path: "items.productId",
       select: "image title price salePrice",
     });
 
@@ -134,7 +134,7 @@ const updateCartItemQty = async (req, res) => {
     if (findCurrentProductIndex === -1) {
       return res.status(404).json({
         success: false,
-        message: "Cart item not present",
+        message: "Cart item not present !",
       });
     }
 
@@ -175,9 +175,9 @@ const deleteCartItem = async (req, res) => {
   try {
     const { userId, productId } = req.params;
     if (!userId || !productId) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
-        mesaage: "Invalid data provided",
+        message: "Invalid data provided!",
       });
     }
 
