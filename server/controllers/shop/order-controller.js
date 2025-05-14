@@ -15,6 +15,8 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
+      paymentId,
+      payerId,
       cartId,
     } = req.body;
 
@@ -61,7 +63,8 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId: order.result.id,
+      paymentId,
+      payerId,
     });
 
     await newOrder.save();
