@@ -20,6 +20,10 @@ const createOrder = async (req, res) => {
       cartId,
     } = req.body;
 
+    const itemTotal = cartItems
+      .reduce((sum, item) => sum + item.price * item.quantity, 0)
+      .toFixed(2);
+
     const request = new paypal.orders.OrdersCreateRequest();
     request.prefer("return=representation");
 
@@ -30,6 +34,12 @@ const createOrder = async (req, res) => {
           amount: {
             currency_code: "USD",
             value: totalAmount.toFixed(2),
+            breakdown: {
+              item_total: {
+                currency_code: "USD",
+                value: itemTotal,
+              },
+            },
           },
           items: cartItems.map((item) => ({
             name: item.title,
@@ -48,7 +58,7 @@ const createOrder = async (req, res) => {
     });
 
     const order = await client.execute(request);
-    const approvalUrl = order.result.links.find(
+    const approvalURL = order.result.links.find(
       (link) => link.rel === "approve"
     ).href;
 
@@ -63,7 +73,7 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId,
+      paymentId: order.result.id,
       payerId,
     });
 
@@ -71,7 +81,7 @@ const createOrder = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      approvalURL: approvalUrl,
+      approvalURL,
       orderId: newOrder._id,
     });
   } catch (error) {
