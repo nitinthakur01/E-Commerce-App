@@ -2,6 +2,7 @@
 const { client } = require("../../config/payment-client");
 const Order = require("../../models/Order");
 const paypal = require("@paypal/checkout-server-sdk");
+const Cart = require("../../models/Cart");
 
 const createOrder = async (req, res) => {
   try {
@@ -73,7 +74,7 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId: order.result.id,
+      paymentId,
       payerId,
     });
 
@@ -83,6 +84,7 @@ const createOrder = async (req, res) => {
       success: true,
       approvalURL,
       orderId: newOrder._id,
+      paymentId: order.result.id,
     });
   } catch (error) {
     console.error("PayPal Create Order Error:", error);
@@ -95,6 +97,32 @@ const createOrder = async (req, res) => {
 
 const capturePayment = async (req, res) => {
   try {
+    const { paymentId, payerId, orderId } = req.body;
+
+    let order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    order.paymentStatus = "paid";
+    order.orderStatus = "confirmed";
+    order.paymentId = paymentId;
+    order.payerId = payerId;
+
+    const getCartId = order.cartId;
+    await Cart.findByIdAndDelete(getCartId);
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Order confirmed",
+      data: order,
+    });
   } catch (e) {
     console.log(e);
     res.status(500).json({
