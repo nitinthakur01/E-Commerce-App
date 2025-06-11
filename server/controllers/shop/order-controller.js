@@ -4,7 +4,6 @@ const Order = require("../../models/Order");
 const paypal = require("@paypal/checkout-server-sdk");
 const Cart = require("../../models/Cart");
 
-console.log("🔥 createOrder API endpoint hit");
 const createOrder = async (req, res) => {
   try {
     const {
