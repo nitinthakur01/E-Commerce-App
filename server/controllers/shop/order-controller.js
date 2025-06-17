@@ -3,6 +3,7 @@ const { client } = require("../../config/payment-client");
 const Order = require("../../models/Order");
 const paypal = require("@paypal/checkout-server-sdk");
 const Cart = require("../../models/Cart");
+const Product = require("../../models/Product");
 
 const createOrder = async (req, res) => {
   try {
@@ -112,6 +113,21 @@ const capturePayment = async (req, res) => {
     order.orderStatus = "confirmed";
     order.paymentId = paymentId;
     order.payerId = payerId;
+
+    for (let item of order.cartItems) {
+      let product = await Product.findById(item.productId);
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: "Now this product is out of stock",
+        });
+      }
+
+      product.totalStock -= item.quantity;
+
+      await product.save();
+    }
 
     const getCartId = order.cartId;
     await Cart.findByIdAndDelete(getCartId);
