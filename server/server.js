@@ -30,7 +30,7 @@ app.use(
       "Pragma",
     ],
     credentials: true,
-  })
+  }),
 );
 
 app.use(cookieParser());
